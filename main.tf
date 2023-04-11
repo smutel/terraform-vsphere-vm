@@ -152,6 +152,13 @@ resource "vsphere_virtual_machine" "vm" {
       io_share_count    = length(var.io_share_level) > 0 && var.io_share_level[template_disks.key] == "custom" ? var.io_share_count[template_disks.key] : null
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      disk[0].eagerly_scrub,
+    ]
+  }
+
   // Disk for template from Content Library
   dynamic "disk" {
     for_each = var.content_library == null ? [] : [1]
